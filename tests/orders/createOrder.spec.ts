@@ -1,4 +1,5 @@
 import { newOrderPayload, orderPayloadWithoutBookId  } from '../../data/factories';
+import { CreateOrderResponse, OrderDetail } from '../../schema/orderResponse';
 import { test, expect } from '../fixtures'
 
 test('creates an order and persists it', { tag: '@smoke'}, async ({ orders, books }) => {
@@ -7,14 +8,14 @@ test('creates an order and persists it', { tag: '@smoke'}, async ({ orders, book
     const response = await orders.post(payload);
     expect(response.status()).toBe(201);
 
-    const body = await response.json();
+    const body = CreateOrderResponse.parse(await response.json());
     const orderId: string = body.orderId;
 
     try {
         const fetchedOrder = await orders.getById(orderId);
         expect(fetchedOrder.status()).toBe(200);
 
-        const order = await fetchedOrder.json();
+        const order = OrderDetail.parse(await fetchedOrder.json());
         expect(order.id).toBe(orderId)
     } finally {
         await orders.delete(orderId);

@@ -42,7 +42,7 @@ Tests describe WHAT is verified. The layers below handle HOW requests are sent.
     core/           -> HTTP wrapper: headers, bearer token, timeout
     config/         -> reads environment variables
     data/           -> payload factories and random test data
-    schema/         -> response contracts (zod)
+    schema/         -> response contracts (zod): one file per resource
 
 Dependencies flow in one direction:
 
@@ -57,7 +57,8 @@ Lower layers must not import from higher ones. data/ and schema/ can be used fro
     clients/ordersApi.ts        orders endpoints
     clients/booksApi.ts         books endpoints
     data/factories.ts           payloads and random data
-    schema/orderResponse.ts     zod schemas for order responses
+    schema/orderResponse.ts     zod schemas: OrderListItem, OrderDetail, CreateOrderResponse
+    schema/bookResponse.ts      zod schemas: Book (GET /books/:id), BookListItem (GET /books)
     tests/fixtures.ts           custom Playwright fixtures
     tests/orders/               order tests
     tests/books/                book tests
@@ -74,6 +75,7 @@ Lower layers must not import from higher ones. data/ and schema/ can be used fro
   - @positive: expected behavior with valid input
   - @negative: invalid input, missing auth, or not-found cases
 - Assertions check status and body. For writes, also verify the change persisted (for example, GET after PATCH).
+- Response schemas live in schema/ (zod), one file per resource. Use them to validate successful response bodies, not error responses.
 
 ## Continuous integration
 

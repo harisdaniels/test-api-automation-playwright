@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures'
+import { BookListItem } from '../../schema/bookResponse';
 
 test('lists all books', { tag: '@smoke' }, async ({ anonApi }) => {
     const response = await anonApi.get('/books');
@@ -8,10 +9,9 @@ test('lists all books', { tag: '@smoke' }, async ({ anonApi }) => {
     expect(Array.isArray(body)).toBe(true);
     expect(body.length).toBeGreaterThan(0);
 
-    expect(body[0]).toHaveProperty('id');
-    expect(body[0]).toHaveProperty('name');
-    expect(body[0]).toHaveProperty('type');
-    expect(body[0]).toHaveProperty('available');
+    for (const item of body) {
+        BookListItem.parse(item);
+    }
 });
 
 test('lists only fiction books when filtered by type', { tag: '@positive' }, async ({ anonApi }) => {

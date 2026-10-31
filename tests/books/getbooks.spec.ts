@@ -1,10 +1,11 @@
 import { test, expect } from '../fixtures'
+import { Book } from '../../schema/bookResponse';
 
 test('gets a single book with all fields', { tag: '@smoke' }, async ({ anonApi, books }) => {
     const bookId  = await books.findBookById(true);
     const response = await anonApi.get(`/books/${bookId }`);
 
-    const body = await response.json();
+    const body = Book.parse(await response.json());
     expect(body).toHaveProperty('id');
     expect(body).toHaveProperty('name');
     expect(body).toHaveProperty('author');

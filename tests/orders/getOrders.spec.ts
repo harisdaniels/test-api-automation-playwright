@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures'
+import { OrderDetail, OrderListItem } from '../../schema/orderResponse';
 
 test('rejects request without token', { tag: '@negative' }, async ({ anonApi }) => {
     const response = await anonApi.get('/orders');
@@ -12,13 +13,16 @@ test('lists orders with token', { tag: '@positive' }, async ({ api }) => {
     expect(response.status()).toBe(200);
     const body = await response.json();
     expect(Array.isArray(body)).toBe(true);
+    for (const item of body) {
+        OrderListItem.parse(item);
+    }
 });
 
 test('gets a single order by id', { tag: '@smoke'}, async ({ orders, createdOrder }) => {
     const response = await orders.getById(createdOrder.orderId);
     expect(response.status()).toBe(200);
 
-    const order = await response.json();
+    const order = OrderDetail.parse(await response.json());
     expect(order.id).toBe(createdOrder.orderId);
 });
 
