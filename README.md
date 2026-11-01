@@ -79,10 +79,14 @@ Lower layers must not import from higher ones. data/ and schema/ can be used fro
 
 ## Continuous integration
 
-The workflow .github/workflows/playwright-api.yml runs manually from the Actions tab (workflow_dispatch).
+The workflow `.github/workflows/playwright-api.yml` runs in two ways:
 
-To run it:
+- **Manually** from the Actions tab (`workflow_dispatch`). Pick a tag from the dropdown: `all`, `@smoke`, `@positive`, or `@negative`.
+- **On a schedule**: every Friday at 22:00 WIB and every Sunday at 07:00 WIB. Scheduled runs execute only `@smoke` tests.
+
+To run it manually:
 1. Go to Actions -> Playwright API Tests -> Run workflow.
-2. When it finishes, open the run and download the playwright-reports artifact.
+2. Pick a tag and run.
+3. When it finishes, open the run and download the `playwright-reports` artifact.
 
-The base URL comes from the repository variable API_BASE_URL (Settings -> Secrets and variables -> Actions -> Variables), not from .env. Make sure it is set before the first run.
+The base URL comes from the repository variable `API_BASE_URL` (Settings -> Secrets and variables -> Actions -> Variables), not from `.env`. Make sure it is set before the first run.
