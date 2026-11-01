@@ -2,6 +2,16 @@ name: Playwright API Tests
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Test tag to run'
+        type: choice
+        options:
+          - all
+          - '@smoke'
+          - '@positive'
+          - '@negative'
+        default: all
   schedule:
     - cron: '0 15 * * 5'
     - cron: '0 0 * * 0'
@@ -27,7 +37,13 @@ jobs:
       - name: Run API tests
         env:
           API_BASE_URL: ${{ vars.API_BASE_URL }}
-        run: npx playwright test
+          TEST_TAG: ${{ inputs.tag }}
+        run: |
+          if [ -z "$TEST_TAG" ] || [ "$TEST_TAG" = "all" ]; then
+            npx playwright test
+          else
+            npx playwright test --grep "$TEST_TAG"
+          fi
 
       - name: Upload reports
         if: always()
