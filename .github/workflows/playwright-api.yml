@@ -23,10 +23,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -38,8 +38,11 @@ jobs:
         env:
           API_BASE_URL: ${{ vars.API_BASE_URL }}
           TEST_TAG: ${{ inputs.tag }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          if [ -z "$TEST_TAG" ] || [ "$TEST_TAG" = "all" ]; then
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            npx playwright test --grep "@smoke"
+          elif [ -z "$TEST_TAG" ] || [ "$TEST_TAG" = "all" ]; then
             npx playwright test
           else
             npx playwright test --grep "$TEST_TAG"
@@ -47,7 +50,7 @@ jobs:
 
       - name: Upload reports
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-reports
           path: |
