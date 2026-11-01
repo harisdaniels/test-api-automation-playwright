@@ -6,7 +6,7 @@
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
   },
   "include": [
     "playwright.config.ts",
@@ -15,6 +15,6 @@
     "clients/**/*.ts",
     "data/**/*.ts",
     "schema/**/*.ts",
-    "tests/**/*.ts"
-  ]
+    "tests/**/*.ts",
+  ],
 }
